@@ -492,4 +492,7 @@ Because this dataset was compiled from published literature, users should cite b
 
 ## Contact
 
-For questions about the data, code, or workflow, please contact the corresponding authors listed in the paper.
+For questions about the data, code, or workflow, please contact:
+
+**Dekai Hu**  
+Email: **5601123141@email.ncu.edu.cn**
