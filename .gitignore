@@ -1,0 +1,26 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Build artifacts
+build/
+dist/
+
+# Local tooling
+.codex_tmp/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local data and generated analysis outputs
+data/
+results/
+logs/
