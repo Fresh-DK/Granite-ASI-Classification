@@ -15,15 +15,12 @@ CHAMPION_DIR = RESULTS_DIR / "04_cluster_champions"
 STABILITY_DIR = RESULTS_DIR / "05_stability"
 LOG_DIR = PROJECT_ROOT / "logs"
 
-RAW_DATA_FILE = RAW_DATA_DIR / "SCB-Mesozoic-Granite.xls"
-CORRECTED_DATA_DIR = PROCESSED_DATA_DIR / "source"
-CORRECTED_DATA_FILE = CORRECTED_DATA_DIR / "SCB-Mesozoic-Granite-corrected.xlsx"
+RAW_DATA_FILE = RAW_DATA_DIR / "SCB-Mesozoic-Granite.csv"
 
 
 def ensure_project_directories() -> None:
     for directory in (
         RAW_DATA_DIR,
-        CORRECTED_DATA_DIR,
         FOLDS_DIR,
         RESULTS_DIR,
         CHAMPION_DIR,

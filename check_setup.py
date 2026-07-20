@@ -29,8 +29,8 @@ def main() -> None:
     missing = [package for package, module in REQUIRED_MODULES.items() if importlib.util.find_spec(module) is None]
     print(f"Project root: {PROJECT_ROOT}")
     print(f"Python: {sys.executable}")
-    print(f"Source workbook: {RAW_DATA_FILE}")
-    print(f"Source workbook exists: {RAW_DATA_FILE.exists()}")
+    print(f"Analysis-ready dataset: {RAW_DATA_FILE}")
+    print(f"Analysis-ready dataset exists: {RAW_DATA_FILE.exists()}")
     if missing:
         print("Missing Python packages: " + ", ".join(missing))
     else:
@@ -38,16 +38,14 @@ def main() -> None:
     if missing:
         raise SystemExit(1)
     if not RAW_DATA_FILE.exists():
-        print("Source workbook is not present; dependency check passed and data validation was skipped.")
+        print("The analysis-ready dataset is not present; dependency check passed and data validation was skipped.")
         return
-    from granite_ml.data import prepare_source_data
+    from granite_ml.io import load_analysis_data
 
-    processed, change_log, raw, header_row = prepare_source_data()
-    print(f"Detected header row (zero-based): {header_row}")
-    print(f"Raw worksheet rows: {len(raw)}")
-    print(f"Prepared source samples: {len(processed)}")
-    print(f"Prepared class counts: {processed['Type'].value_counts().to_dict()}")
-    print(f"Documented source changes: {len(change_log)}")
+    data = load_analysis_data()
+    print(f"Input samples: {len(data)}")
+    print(f"Input class counts: {data['Type'].value_counts().to_dict()}")
+    print(f"Input columns: {data.shape[1]}")
     print("Setup check passed.")
 
 

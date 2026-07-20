@@ -44,17 +44,15 @@ figures, and logs are excluded from version control.
 The dataset is not distributed in this repository. Data will be made available
 from the corresponding author upon reasonable request.
 
-After obtaining the source workbook, place it at:
+After obtaining the analysis-ready dataset, place it at:
 
 ```text
-data/raw/SCB-Mesozoic-Granite.xls
+data/raw/SCB-Mesozoic-Granite.csv
 ```
 
-The source-publication list is supplied together with the requested dataset.
-The workbook is read without modification. Identity-constrained corrections
-and exclusion of one blank separator row are implemented in
-`src/granite_ml/data.py`; an auditable prepared copy is generated locally under
-`data/processed/source/`.
+The requested dataset is supplied as an analysis-ready table. It must contain
+canonical `A`, `S`, and `I` class labels and numeric geochemical feature cells.
+Blank feature cells are allowed and are handled by fold-local imputation.
 
 ## Installation
 
@@ -67,8 +65,8 @@ python -m pip install -e .
 python check_setup.py
 ```
 
-`check_setup.py` validates installed dependencies. If the source workbook is
-present, it also checks the header, source corrections, sample count, and class
+`check_setup.py` validates installed dependencies. If the analysis-ready
+dataset is present, it also checks its structure, sample count, and class
 labels; otherwise it reports that data validation was skipped.
 
 ## Running the workflow
@@ -123,4 +121,3 @@ interpretation, not for estimating generalization performance.
 ## License
 
 The source code is available under the [MIT License](LICENSE).
-

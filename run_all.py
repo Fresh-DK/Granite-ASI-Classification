@@ -88,9 +88,9 @@ def main() -> None:
     steps = selected_steps(args)
     if any(step in {"00", "01"} for step in steps) and not RAW_DATA_FILE.exists():
         raise SystemExit(
-            "Missing source workbook. Copy it to:\n"
+            "Missing analysis-ready dataset. Copy it to:\n"
             f"  {RAW_DATA_FILE}\n"
-            "Expected filename: SCB-Mesozoic-Granite.xls"
+            "Expected filename: SCB-Mesozoic-Granite.csv"
         )
     for step in steps:
         run_step(step)

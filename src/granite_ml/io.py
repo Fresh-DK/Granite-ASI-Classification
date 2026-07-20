@@ -4,8 +4,50 @@ from pathlib import Path
 
 import pandas as pd
 
-from .config import CHAMPION_DIR, FOLDS_DIR
-from .features import NON_FEATURE_COLS, RHO_TAG, TYPE_COL, normalize_type_value
+from .config import CHAMPION_DIR, FOLDS_DIR, RAW_DATA_FILE
+from .features import CLASS_ORDER, NON_FEATURE_COLS, RHO_TAG, TYPE_COL, normalize_type_value
+
+
+def load_analysis_data(path: str | Path = RAW_DATA_FILE) -> pd.DataFrame:
+    """Load the analysis-ready input table without correcting source values.
+
+    The input contract requires canonical A/S/I labels and numeric feature
+    cells (missing cells are allowed). Invalid values raise an error instead
+    of being silently repaired or discarded.
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Missing analysis-ready dataset: {path}")
+
+    if path.suffix.lower() == ".csv":
+        frame = pd.read_csv(path, float_precision="round_trip")
+    else:
+        frame = pd.read_excel(path)
+    if TYPE_COL not in frame.columns:
+        raise ValueError(f"The input dataset must contain the {TYPE_COL!r} column.")
+    if frame.empty:
+        raise ValueError("The input dataset contains no samples.")
+
+    labels = set(frame[TYPE_COL].dropna().astype(str))
+    unexpected = sorted(labels - set(CLASS_ORDER))
+    if frame[TYPE_COL].isna().any() or unexpected:
+        raise ValueError(
+            "The input dataset must use non-missing canonical class labels "
+            f"{CLASS_ORDER}; unexpected labels: {unexpected}"
+        )
+
+    numeric_columns = feature_columns(frame)
+    if not numeric_columns:
+        raise ValueError("The input dataset contains no feature columns.")
+    for column in numeric_columns:
+        try:
+            frame[column] = pd.to_numeric(frame[column], errors="raise")
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Feature column {column!r} contains a non-numeric value. "
+                "Provide numeric values in the analysis-ready dataset."
+            ) from exc
+    return frame
 
 
 def fold_file(method: str, fold: int, split: str) -> Path:
@@ -66,4 +108,3 @@ def check_train_test_separation(train: pd.DataFrame, test: pd.DataFrame) -> None
         if overlap:
             raise ValueError(f"Train/test overlap in ID column {column!r}: {sorted(overlap)[:10]}")
         return
-
